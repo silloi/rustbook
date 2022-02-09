@@ -1,10 +1,13 @@
+// #![feature(alloc_error_handler)]
 #![no_std]
 #![no_main]
 
+extern crate alloc;
 extern crate panic_halt;
+extern crate panic_semihosting;
 
 use cortex_m_rt::entry;
-use cortex_m_semihosting::debug;
+use cortex_m_semihosting::{debug, hprintln};
 use stm32f4xx_hal::{delay::Delay, prelude::*, stm32};
 
 use embedded_hal::serial::Write;
@@ -12,8 +15,45 @@ use stm32f4xx_hal::serial::{config::Config, config::StopBits, Serial};
 
 use stm32f4xx_hal::i2c::I2c;
 
+// use alloc::alloc::{GlobalAlloc, Layout};
+// use alloc::vec::Vec;
+
+// struct MyAllocator;
+
+// unsafe impl GlobalAlloc for MyAllocator {
+//     unsafe fn alloc(&self, _layout: Layout) -> *mut u8 {
+//         0x2000_0100 as *mut u8
+//     }
+//     unsafe fn dealloc(&self, _ptr: *mut u8, _layout: Layout) {}
+// }
+
+// #[global_allocator]
+// static A: MyAllocator = MyAllocator;
+
+// #[alloc_error_handler]
+// fn on_oom(_layout: Layout) -> ! {
+//     loop {}
+// }
+
+// use heapless::Vec;
+
 #[entry]
 fn main() -> ! {
+    panic!("panic!!!");
+
+    // let mut x = Vec::<_, 2>::new();
+    // let _ = x.push(123);
+    // let _ = x.push(456);
+    // let _ = x.push(789);
+
+    // let _ = hprintln!("{:?}", x);
+
+    // let mut x = Vec::new();
+    // x.push(123);
+    // x.push(456);
+
+    // let _ = hprintln!("{:?}", x);
+
     if let (Some(dp), Some(cp)) = (stm32::Peripherals::take(), stm32::CorePeripherals::take()) {
         let rcc = dp.RCC.constrain();
         let clocks = rcc.cfgr.sysclk(48.mhz()).freeze();
